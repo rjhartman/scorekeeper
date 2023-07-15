@@ -1,0 +1,4 @@
+flask
+flask-sqlalchemy
+alembic
+psycopg2-binary
