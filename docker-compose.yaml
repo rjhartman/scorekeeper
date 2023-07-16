@@ -1,0 +1,12 @@
+services:
+  api:
+    build: api/
+    ports:
+      - "8000:5000"
+    depends_on: [postgres]
+  postgres:
+    build: postgres/
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
