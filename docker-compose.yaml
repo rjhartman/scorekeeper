@@ -3,5 +3,10 @@ services:
     build: api/
     ports:
       - "8000:5000"
+    depends_on: [postgres]
   postgres:
-    image: "postgres:15.3-alpine"
+    build: postgres/
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:

@@ -1,4 +1,6 @@
-flask
-flask-sqlalchemy
 alembic
+flask
+flask-marshmallow
+flask-sqlalchemy
 psycopg2-binary
+marshmallow-sqlalchemy
