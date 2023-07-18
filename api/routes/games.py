@@ -37,9 +37,10 @@ def delete_game(game_id):
     return "success", 204
 
 
-@app.route("/games", methods=["PUT"])
-def update_game():
+@app.route("/games/<int:game_id>", methods=["PUT"])
+def update_game(game_id):
     schema = GameSchema()
+    _ = Game.query.get_or_404(game_id)
     if not request.is_json:
         abort(400, "Must supply a JSON body.")
     try:
@@ -48,13 +49,7 @@ def update_game():
         abort(400, jsonify(err.messages))
 
     patch = Game(**result)
-    if not patch.id:
-        abort(400, "Must provide id in request body")
-
-    # we could put a check in here to make sure that the id exists in the db
-    # and abort if it's not found
-    # right now merge() will attempt to update an existing instance if it finds
-    # a matching id. else returns a new instance
+    patch.id = game_id
 
     updated_game = db.session.merge(patch)
     db.session.commit()
