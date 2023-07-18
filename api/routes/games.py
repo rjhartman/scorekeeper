@@ -34,12 +34,12 @@ def delete_game(game_id):
     game = Game.query.get_or_404(game_id)
     db.session.delete(game)
     db.session.commit()
-    return 204
+    return "success", 204
 
 
-@app.route("/games/<int:game_id>", methods=["PUT"])
-def update_game(game_id):
-    # game = Game.query.get_or_404(game_id)
+@app.route("/games", methods=["PUT"])
+def update_game():
+    schema = GameSchema()
     if not request.is_json:
         abort(400, "Must supply a JSON body.")
     try:
@@ -47,7 +47,15 @@ def update_game(game_id):
     except ValidationError as err:
         abort(400, jsonify(err.messages))
 
-    new_game = Game(**result)
+    patch = Game(**result)
+    if not patch.id:
+        abort(400, "Must provide id in request body")
 
+    # we could put a check in here to make sure that the id exists in the db
+    # and abort if it's not found
+    # right now merge() will attempt to update an existing instance if it finds
+    # a matching id. else returns a new instance
+
+    updated_game = db.session.merge(patch)
     db.session.commit()
-    return jsonify({"game": new_game.away_team}), 200
+    return schema.jsonify(updated_game), 200
