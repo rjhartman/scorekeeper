@@ -1,4 +1,3 @@
-
 from flask import Blueprint, jsonify, request, abort
 from marshmallow.exceptions import ValidationError
 from ..models.Game import Game, GameSchema
